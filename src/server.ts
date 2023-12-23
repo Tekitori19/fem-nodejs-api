@@ -3,6 +3,7 @@ import router from './router'
 import morgan from 'morgan'
 import cors from 'cors'
 import { customLogger } from './examples/middleware/custom_middleware'
+import { protect } from './modules/auth'
 
 const app = express()
 
@@ -16,13 +17,13 @@ app.use(express.urlencoded({extended: true})) //Make client to encode url to obj
 //ex: 'google.com?a=1,thing=otherthing' query string behind "?" will become object for us
 app.use(customLogger('Dwcks Dinh')) //Use custom middleware
 
-app.get('/', (req, res) => {
+app.get('/', protect, (req, res) => {
     res.status(200)
     res.json({
         message: "just message"
     })
 })
 
-app.use('/api', router)
+app.use('/api', protect, router)
 
 export default app
